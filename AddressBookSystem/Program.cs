@@ -102,7 +102,8 @@ namespace AddressBookSystem
                         break;
                     case "9":
                         Console.WriteLine("Enter ta to Append Contact Details in text file \nEnter tr to Read Data from text File" +
-                            "\nEnter ca to Append Contact Details in csv file \nEnter cr to Read Data from csv Files\nPress any other key to exit");
+                            "\nEnter ca to Append Contact Details in csv file \nEnter cr to Read Data from csv Files" +
+                            "\nEnter ja to Append Contact Details in json file \nEnter jr to Read Data from json Files\nPress any other key to exit");
                         string appendOrRead = Console.ReadLine().ToLower();
                         switch (appendOrRead)
                         {
@@ -117,6 +118,12 @@ namespace AddressBookSystem
                                 break;
                             case "cr":
                                 FileIOOperations.ReadContactDetailsFromCsvFile();
+                                break;
+                            case "ja":
+                                FileIOOperations.AppendContactDetailsToJsonFile();
+                                break;
+                            case "jr":
+                                FileIOOperations.ReadContactDetailsFromJsonFile();
                                 break;
                             default:
                                 break;

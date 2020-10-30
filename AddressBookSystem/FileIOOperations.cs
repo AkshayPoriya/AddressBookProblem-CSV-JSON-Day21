@@ -7,6 +7,7 @@
 namespace AddressBookSystem
 {
     using CsvHelper;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -137,6 +138,61 @@ namespace AddressBookSystem
                             Console.Write("\t" + contact.phoneNumber);
                             Console.Write("\t" + contact.email + "\n");
                         }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception occured: " + ex.Message);
+            }
+        }
+
+        public static void AppendContactDetailsToJsonFile()
+        {
+            try
+            {
+                foreach (KeyValuePair<string, AddressBook> pair in AddressBookDirectory.addressBookMapper)
+                {
+                    string path = @"G:\Programming\Bridge Labz\04 C# IO Streams\02_AddressBookProblem_CSV_JSON\AddressBookSystem\AddressBook_" + pair.Key + ".json";
+                    using (StreamWriter sw = new StreamWriter(path))
+                    using (JsonWriter jw = new JsonTextWriter(sw))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        serializer.Serialize(jw, pair.Value.contactList);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception occured: " + ex.Message);
+            }
+        }
+
+        public static void ReadContactDetailsFromJsonFile()
+        {
+            try
+            {
+                foreach (KeyValuePair<string, AddressBook> pair in AddressBookDirectory.addressBookMapper)
+                {
+                    string path = @"G:\Programming\Bridge Labz\04 C# IO Streams\02_AddressBookProblem_CSV_JSON\AddressBookSystem\AddressBook_" + pair.Key + ".json";
+                    if (!File.Exists(path))
+                    {
+                        Console.WriteLine("File doesn't exist!");
+                        return;
+                    }
+
+                    IList<Contact> records = JsonConvert.DeserializeObject<IList<Contact>>(File.ReadAllText(path));
+                    Console.WriteLine("\n******************* AddressBook_" + pair.Key + ".json *******************\n");
+                    foreach (Contact contact in records)
+                    {
+                        Console.Write(contact.firstName);
+                        Console.Write("\t" + contact.lastName);
+                        Console.Write("\t" + contact.address);
+                        Console.Write("\t" + contact.city);
+                        Console.Write("\t" + contact.state);
+                        Console.Write("\t" + contact.zip);
+                        Console.Write("\t" + contact.phoneNumber);
+                        Console.Write("\t" + contact.email + "\n");
                     }
                 }
             }
