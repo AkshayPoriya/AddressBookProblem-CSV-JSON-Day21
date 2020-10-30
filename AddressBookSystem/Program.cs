@@ -101,15 +101,22 @@ namespace AddressBookSystem
                         AddressBookDirectory.ViewInSortedOrder();
                         break;
                     case "9":
-                        Console.WriteLine("Press a to Append Contact Details in text file \nPress r to Read Data from text File\nPress any other key to exit");
+                        Console.WriteLine("Enter ta to Append Contact Details in text file \nEnter tr to Read Data from text File" +
+                            "\nEnter ca to Append Contact Details in csv file \nEnter cr to Read Data from csv Files\nPress any other key to exit");
                         string appendOrRead = Console.ReadLine().ToLower();
                         switch (appendOrRead)
                         {
-                            case "a":
+                            case "ta":
                                 FileIOOperations.AppendContactDetailsToTextFile();
                                 break;
-                            case "r":
+                            case "tr":
                                 FileIOOperations.ReadContactDetailsFromTextFile();
+                                break;
+                            case "ca":
+                                FileIOOperations.AppendContactDetailsToCsvFile();
+                                break;
+                            case "cr":
+                                FileIOOperations.ReadContactDetailsFromCsvFile();
                                 break;
                             default:
                                 break;

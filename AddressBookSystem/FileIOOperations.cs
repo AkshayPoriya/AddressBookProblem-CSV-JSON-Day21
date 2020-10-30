@@ -6,9 +6,12 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace AddressBookSystem
 {
+    using CsvHelper;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
 
     class FileIOOperations
@@ -22,7 +25,7 @@ namespace AddressBookSystem
         {
             try
             {
-                string path = @"G:\Programming\Bridge Labz\04 C# IO Streams\01_AddressBookProblem_FileIO\AddressBookSystem\AddressBookDirectory.txt";
+                string path = @"G:\Programming\Bridge Labz\04 C# IO Streams\02_AddressBookProblem_CSV_JSON\AddressBookSystem\AddressBookDirectory.txt";
                 
                 using (StreamWriter sr = File.AppendText(path))
                 {
@@ -63,7 +66,7 @@ namespace AddressBookSystem
         {
             try
             {
-                string path = @"G:\Programming\Bridge Labz\04 C# IO Streams\01_AddressBookProblem_FileIO\AddressBookSystem\AddressBookDirectory.txt";
+                string path = @"G:\Programming\Bridge Labz\04 C# IO Streams\02_AddressBookProblem_CSV_JSON\AddressBookSystem\AddressBookDirectory.txt";
                 if (!File.Exists(path))
                 {
                     Console.WriteLine("File doesn't exist!");
@@ -80,6 +83,64 @@ namespace AddressBookSystem
                 }
             }
             catch(Exception ex)
+            {
+                Console.WriteLine("Exception occured: " + ex.Message);
+            }
+        }
+
+        public static void AppendContactDetailsToCsvFile()
+        {
+            try
+            {
+                foreach (KeyValuePair<string, AddressBook> pair in AddressBookDirectory.addressBookMapper)
+                {
+                    string path = @"G:\Programming\Bridge Labz\04 C# IO Streams\02_AddressBookProblem_CSV_JSON\AddressBookSystem\AddressBook_" + pair.Key + ".csv";
+                    using (StreamWriter writer = new StreamWriter(path))
+                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                    {
+                        csv.WriteRecords(pair.Value.contactList);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception occured: " + ex.Message);
+            }
+        }
+
+        public static void ReadContactDetailsFromCsvFile()
+        {
+            try
+            {
+                foreach (KeyValuePair<string, AddressBook> pair in AddressBookDirectory.addressBookMapper)
+                {
+                    string path = @"G:\Programming\Bridge Labz\04 C# IO Streams\02_AddressBookProblem_CSV_JSON\AddressBookSystem\AddressBook_" + pair.Key + ".csv";
+                    if (!File.Exists(path))
+                    {
+                        Console.WriteLine("File doesn't exist!");
+                        return;
+                    }
+
+                    using (var streamReader = new StreamReader(path))
+                    using (var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture))
+                    {
+                        var records = csvReader.GetRecords<Contact>().ToList();
+                        Console.WriteLine("\n******************* AddressBook_" + pair.Key + ".csv *******************\n");
+                        foreach (Contact contact in records)
+                        {
+                            Console.Write(contact.firstName);
+                            Console.Write("\t" + contact.lastName);
+                            Console.Write("\t" + contact.address);
+                            Console.Write("\t" + contact.city);
+                            Console.Write("\t" + contact.state);
+                            Console.Write("\t" + contact.zip);
+                            Console.Write("\t" + contact.phoneNumber);
+                            Console.Write("\t" + contact.email + "\n");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Exception occured: " + ex.Message);
             }
